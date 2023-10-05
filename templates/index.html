@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Summarization</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/static/css/jquery-ui.min.css" rel="stylesheet">
+    <style>
+        /* Add a general reset for padding and margin */
+        body, p, h1, h2, h3, ul, li {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Improve body font and background */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Style the header */
+        header {
+            background-color: #004A56;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        header img {
+            width: 30px; /* Adjust this size as needed */
+            margin-right: 10px;
+        }
+
+        /* Improve the form section */
+        form {
+            background-color: white;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        form input[type="range"] {
+            width: 80%;
+        }
+
+        /* Style the buttons */
+        button {
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        /* Improve the result section */
+        #resultTextarea {
+            background-color: #EDFFD2;
+            border: 1px solid #4CAF50;
+        }
+
+        /* Center the copy button */
+        button[onclick="myFunction"] {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <img src="/static/project.png" alt="Logo">
+        <div>Data Summarization</div>
+    </header>
+
+    <section class="flex flex-wrap mt-20 w-full">
+        <div class="w-full md:w-1/2">
+            <form action="{{url_for('Summarize')}}" method="post">
+                <textarea name="data" id="data" cols="30" rows="10" placeholder="Enter your Data" required="required"></textarea>
+                <div class="flex self-center">
+                    <h3>Summary Length</h3>
+                    <input type="range" class="m-2" min="20" max="1000" name="maxL">
+                </div>
+                <div class="flex self-center">
+                    <button id="submitButton" class="m-1 bg-green-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg"
+                        type="submit">Submit</button>
+                    <button class="m-1 bg-red-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg"
+                        type="reset">Clear</button>
+                </div>
+            </form>
+        </div>
+        <div class="w-full md:w-1/2">
+            <div class="mt-2 flex flex-col w-full md:h-screen">
+                <textarea id="resultTextarea" rows="10" cols="30" name="result" readonly placeholder="Your Summary">{{result}}</textarea>
+                <button class="m-2 bg-blue-400 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg self-center"
+                    onclick="myFunction()">Copy text</button>
+            </div>
+        </div>
+    </section>
+    <script>
+        function myFunction() {
+            /* Get the text field */
+            var copyText = document.getElementById("resultTextarea");
+
+            /* Select the text field */
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); /* For mobile devices */
+
+            /* Copy the text inside the text field */
+            navigator.clipboard.writeText(copyText.value);
+        }
+    </script>
+    <script>
+        function Check() {
+            var reg = /<(.|\n)*>/g;
+
+            if (reg.test(document.getElementById("data").value)) {
+                var errorText = 'Make Sure You Provide Valid Data.';
+                alert(errorText);
+                event.preventDefault(); // Prevent form submission on error.
+            }
+        }
+
+        // Add event listener to the submit button.
+        document.getElementById("submitButton").addEventListener("click", Check);
+    </script>
+</body>
+
+</html>
